@@ -25,7 +25,33 @@ def train_model(request):
     # 2. Preprocess
     X, y, feature_names = preprocess_data(df, target_column, task_type, request.use_scaling)
     
-    # 3. Get Model
+    # 3. Downsample if dataset is too large to prevent extremely long training times
+    MAX_SAMPLES = 50000
+    if model_name in ["SVM", "KNN", "DBSCAN", "Agglomerative Clustering"]:
+        MAX_SAMPLES = 10000
+        
+    if X.shape[0] > MAX_SAMPLES:
+        import numpy as np
+        if y is not None and task_type == "Classification":
+            from sklearn.model_selection import StratifiedShuffleSplit
+            # Try stratified sampling first if we have enough samples of each class
+            try:
+                sss = StratifiedShuffleSplit(n_splits=1, train_size=MAX_SAMPLES, random_state=42)
+                for train_index, _ in sss.split(X, y):
+                    X = X[train_index]
+                    y = y[train_index]
+            except ValueError:
+                # Fallback to random sampling if stratified fails (e.g., small classes)
+                indices = np.random.choice(X.shape[0], MAX_SAMPLES, replace=False)
+                X = X[indices]
+                y = y[indices]
+        else:
+            indices = np.random.choice(X.shape[0], MAX_SAMPLES, replace=False)
+            X = X[indices]
+            if y is not None:
+                y = y[indices]
+
+    # 4. Get Model
     model = get_model(task_type, model_name)
     
     # 4. Train and Evaluate

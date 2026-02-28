@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import { useNavigate } from 'react-router-dom';
+import client from '../api/client';
 import { RefreshCw, Download, BarChart2, PieChart, Activity } from 'lucide-react';
 
 const ResultsPage = () => {

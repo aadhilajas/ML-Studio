@@ -18,21 +18,23 @@ const HistoryPage = () => {
         fetchHistory();
     }, []);
 
-    const formatMetric = (taskType, metrics) => {
-        if (!metrics) return 'N/A';
+    const formatMetric = (taskType, metricsObj) => {
+        if (!metricsObj) return 'N/A';
+        // The backend stores the full result in the metrics column, meaning actual metrics might be nested
+        const metrics = metricsObj.metrics || metricsObj;
 
         if (taskType === 'Classification') {
-            const acc = metrics.accuracy || metrics.Accuracy;
+            const acc = metrics.accuracy || metrics.Accuracy || metrics.test_score;
             if (acc === undefined || acc === null) return 'Acc: N/A';
             return `Acc: ${(Number(acc) * 100).toFixed(1)}%`;
         }
         if (taskType === 'Regression') {
-            const r2 = metrics.r2 || metrics.R2 || metrics.r2_score;
+            const r2 = metrics.r2 || metrics.R2 || metrics.r2_score || metrics.test_score;
             if (r2 === undefined || r2 === null) return 'R²: N/A';
             return `R²: ${Number(r2).toFixed(2)}`;
         }
         if (taskType === 'Clustering') {
-            const sil = metrics.silhouette || metrics.Silhouette;
+            const sil = metrics.silhouette || metrics.Silhouette || metrics.silhouette_score;
             if (sil === undefined || sil === null) return 'Silhouette: N/A';
             return `Silhouette: ${Number(sil).toFixed(2)}`;
         }
