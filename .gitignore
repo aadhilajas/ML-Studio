@@ -1,0 +1,45 @@
+# Python Built-ins
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+env.bak/
+venv.bak/
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Node & Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Database
+*.db
+*.sqlite3
+ml_app.db
+
+# Backend App User Data
+backend/models_saved/
+backend/uploads/
+
+# IDE & OS Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+coverage/
+.coverage
+htmlcov/
